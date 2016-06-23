@@ -1,26 +1,28 @@
 /// <reference path="jasmine.d.ts" />
-/// <reference path="../src/typestate.ts" />
+
+import {FiniteStateMachine} from '../src/typestate';
+
 enum ValidStates {
       A,
       B,
       C,
       D
 }
-describe('A finite state machine', ()=>{
-   var fsm: TypeState.FiniteStateMachine<ValidStates>;
+describe('A finite state machine', ()=> {
+   var fsm: FiniteStateMachine<ValidStates>;
    beforeEach(() => {
-      fsm = new TypeState.FiniteStateMachine<ValidStates>(ValidStates.A);
+      fsm = new FiniteStateMachine<ValidStates>(ValidStates.A);
    });
 
-   it('should exist', ()=>{
-      expect(TypeState.FiniteStateMachine).toBeDefined();
+   it('should exist', ()=> {
+      expect(FiniteStateMachine).toBeDefined();
    });
 
-   it('can be instantiated with an enum', ()=>{
+   it('can be instantiated with an enum', ()=> {
       expect(fsm).toBeTruthy();
    });
 
-   it('validates cannot transition to a state that is not defined', ()=>{
+   it('validates cannot transition to a state that is not defined', ()=> {
       expect(fsm.canGo(ValidStates.B)).toBeFalsy();
    });
 
@@ -67,7 +69,7 @@ describe('A finite state machine', ()=>{
       expect(fsm.currentState).toBe(ValidStates.A);
    });
 
-   it('can handle the wildcard ".fromAny()" from state', ()=>{
+   it('can handle the wildcard ".fromAny()" from state', () => {
       fsm.fromAny(ValidStates).to(ValidStates.B);
 
       this.currentState = ValidStates.A;
@@ -83,7 +85,7 @@ describe('A finite state machine', ()=>{
       expect(fsm.canGo(ValidStates.B)).toBe(true);
    });
 
-   it('can handle the wildcard ".toAny()" to state', ()=>{
+   it('can handle the wildcard ".toAny()" to state', () => {
       fsm.from(ValidStates.A).toAny(ValidStates);
 
       expect(fsm.canGo(ValidStates.A)).toBe(true);
@@ -97,7 +99,7 @@ describe('A finite state machine', ()=>{
       expect(fsm.currentState).toBe(ValidStates.A);
       expect(() => { fsm.go(ValidStates.C); }).toThrow('Error no transition function exists from state ' + ValidStates.A.toString() + ' to ' + ValidStates.C.toString());
    });
-   
+
    it('can handle an invalid state transition', () => {
       fsm.from(ValidStates.A).to(ValidStates.B);
       var fromResult: ValidStates;
@@ -111,7 +113,7 @@ describe('A finite state machine', ()=>{
       expect(fromResult).toBe(ValidStates.A);
       expect(toResult).toBe(ValidStates.C);
       expect(fsm.currentState).toBe(ValidStates.A);
-      
+
    });
 
    it('fires "on" callbacks when transitioning to a listend state', () => {
@@ -176,7 +178,7 @@ describe('A finite state machine', ()=>{
       expect(fromState).toBe(ValidStates.A);
    });
 
-   it('passes the "from" state to the ".onEnter" callback', ()=>{
+   it('passes the "from" state to the ".onEnter" callback', () => {
       fsm.from(ValidStates.A).to(ValidStates.B);
       fsm.from(ValidStates.B).to(ValidStates.A);
       var fromState: ValidStates;
@@ -188,7 +190,7 @@ describe('A finite state machine', ()=>{
       expect(fromState).toBe(ValidStates.A);
    });
 
-   it('passes the "to" state to the ".onExit" callback', ()=>{
+   it('passes the "to" state to the ".onExit" callback', () => {
       fsm.from(ValidStates.A).to(ValidStates.B);
       fsm.from(ValidStates.B).to(ValidStates.A);
       var toState: ValidStates;
@@ -222,7 +224,7 @@ describe('A finite state machine', ()=>{
       fsm.onTransition = function(from: ValidStates, to: ValidStates){
          lastFrom = from;
          lastTo = to;
-      }
+      };
 
       fsm.go(ValidStates.B);
       expect(lastFrom).toBe(ValidStates.A);
@@ -233,7 +235,7 @@ describe('A finite state machine', ()=>{
       expect(lastTo).toBe(ValidStates.C);
 
    });
-   
+
    it('can compare current state', () => {
       expect(fsm.is(ValidStates.A)).toBe(true);
    });

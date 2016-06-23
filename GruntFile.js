@@ -87,7 +87,7 @@ module.exports = function (grunt) {
          // Execute TypeScript compiler against Excalibur core
          //
          tsc: {
-            command: 'tsc --sourcemap --declaration "./src/typestate.ts" -out "./dist/<%= pkg.name %>-<%= pkg.version %>.js"',               
+            command: '$(npm bin)/tsc --sourcemap --declaration "./src/typestate.ts" -out "./dist/<%= pkg.name %>-<%= pkg.version %>.js"',
             options: {
                stdout: true,
                failOnError: true
@@ -102,14 +102,14 @@ module.exports = function (grunt) {
             options: {
                stdout: true
             }
-         },         
+         },
 
          //
          // TypeScript Compile Jasmine specs
          // TODO: Simplify this so we don't have to always update it every time we add a spec
          //
          specs: {
-            command: 'tsc "./spec/TypeStateSpec.ts" -out "./spec/TypeStateSpec.js"',
+            command: '$(npm bin)/tsc "./spec/TypeStateSpec.ts" -module commonjs',
             options: {
                stdout: true,
                failOnError: true

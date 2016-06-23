@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "umd",
+        "declaration": true,
+        "noImplicitAny": false,
+        "removeComments": false,
+        "moduleResolution": "node",
+        "noLib": false,
+        "outDir": "dist",
+        "stripInternal": true,
+        "pretty": true,
+        "inlineSourceMap": true,
+        "inlineSources": true
+    },
+    "filesGlob": [
+        "./src/**/*.ts"
+    ],
+    "files": [
+        "./src/typestate.ts"
+    ],
+    "atom": {
+        "rewriteTsconfig": true
+    }
+}

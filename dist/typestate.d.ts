@@ -1,8 +1,8 @@
-declare module TypeState {
+declare module "typestate" {
     /**
      * Transition grouping to faciliate fluent api
      */
-    class Transitions<T> {
+    export class Transitions<T> {
         fsm: FiniteStateMachine<T>;
         constructor(fsm: FiniteStateMachine<T>);
         fromStates: T[];
@@ -20,7 +20,7 @@ declare module TypeState {
     /**
      * Internal representation of a transition function
      */
-    class TransitionFunction<T> {
+    export class TransitionFunction<T> {
         fsm: FiniteStateMachine<T>;
         from: T;
         to: T;
@@ -31,13 +31,13 @@ declare module TypeState {
      * for modeling more complicated behaviors than with just FSMs
      * Please refer to https://en.wikipedia.org/wiki/UML_state_machine
      */
-    class HierarchicalStateMachine {
+    export class HierarchicalStateMachine {
     }
     /**
      * A simple finite state machine implemented in TypeScript, the templated argument is meant to be used
      * with an enumeration.
      */
-    class FiniteStateMachine<T> {
+    export class FiniteStateMachine<T> {
         currentState: T;
         private _startState;
         private _transitionFunctions;
