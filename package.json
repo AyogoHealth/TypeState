@@ -3,6 +3,7 @@
   "version": "1.0.2",
   "description": "A small finite state machine implementation in TypeScript.",
   "main": "dist/typestate.js",
+  "typings": "dist/typestate.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/eonarheim/TypeState.git"
