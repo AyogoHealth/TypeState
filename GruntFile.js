@@ -15,16 +15,18 @@ module.exports = function (grunt) {
       // Configure jasmine-node to run Jasmine specs
       //
       jasmine_node: {
-         specNameMatcher: "Spec", // load only specs containing specNameMatcher
-         projectRoot: "./spec",
-         requirejs: false,
-         forceExit: true,
-         jUnit: {
-            report: false,
-            savePath: "./dist/reports/jasmine/",
-            useDotNotation: true,
-            consolidate: true
-         }
+        options: {
+          specNameMatcher: "Spec", // load only specs containing specNameMatcher
+          requirejs: false,
+          forceExit: true,
+          jUnit: {
+              report: false,
+              savePath: "./dist/reports/jasmine/",
+              useDotNotation: true,
+              consolidate: true
+          }
+        },
+        all: ['spec/']
       },
 
       //
@@ -33,12 +35,14 @@ module.exports = function (grunt) {
       //
       concat: {
          main: {
-            src: ['dist/<%= pkg.name %>-<%= pkg.version %>.js'],
-            dest: 'dist/<%= pkg.name %>-<%= pkg.version %>.js'
+            src: ['dist/<%= pkg.name %>.js'],
+            dest: 'dist/<%= pkg.name %>.js',
+            sourceMap: true,
+            sourceMapStyle: 'inline'
          },
          minified: {
-            src: ['dist/<%= pkg.name %>-<%= pkg.version %>.min.js'],
-            dest: 'dist/<%= pkg.name %>-<%= pkg.version %>.min.js'
+            src: ['dist/<%= pkg.name %>.min.js'],
+            dest: 'dist/<%= pkg.name %>.min.js'
          },
          options: {
             separator: '\n;\n',
@@ -51,18 +55,14 @@ module.exports = function (grunt) {
       },
 
       //
-      // Minify files
+      // UglifyJS files
       //
-      minified: {
-         files: {
-            src: 'dist/<%= pkg.name %>-<%= pkg.version %>.js',
-            dest: 'dist/<%= pkg.name %>-<%= pkg.version %>'
-         },
-         options: {
-            sourcemap: false,
-            allinone: true,
-            dest_filename: '.min.js'
-         }
+      uglify: {
+        main: {
+          files: {
+            'dist/<%= pkg.name %>.min.js': 'dist/<%= pkg.name %>.js'
+          }
+        }
       },
 
       //
@@ -87,7 +87,7 @@ module.exports = function (grunt) {
          // Execute TypeScript compiler against Excalibur core
          //
          tsc: {
-            command: '$(npm bin)/tsc --sourcemap --declaration "./src/typestate.ts" -out "./dist/<%= pkg.name %>-<%= pkg.version %>.js"',
+            command: '$(npm bin)/tsc -p .',
             options: {
                stdout: true,
                failOnError: true
@@ -123,24 +123,19 @@ module.exports = function (grunt) {
       copy: {
          main: {
             files: [
-               {src: './dist/<%= pkg.name %>-<%= pkg.version %>.js', dest: './dist/<%= pkg.name %>.js'},
-               {src: './dist/<%= pkg.name %>-<%= pkg.version %>.min.js', dest: './dist/<%= pkg.name %>.min.js'},
-               {src: './dist/<%= pkg.name %>-<%= pkg.version %>.d.ts', dest: './dist/<%= pkg.name %>.d.ts'}
+               {src: './dist/<%= pkg.name %>.js', dest: './dist/<%= pkg.name %>-<%= pkg.version %>.js'},
+               {src: './dist/<%= pkg.name %>.min.js', dest: './dist/<%= pkg.name %>-<%= pkg.version %>.min.js'},
+               {src: './dist/<%= pkg.name %>.d.ts', dest: './dist/<%= pkg.name %>-<%= pkg.version %>.d.ts'}
             ]
          }
       },
-
-      //
-      // UglifyJS configuration
-      //
-      uglify: {}
    });
 
    //
    // Load NPM Grunt tasks as dependencies
    //
    grunt.loadNpmTasks('grunt-shell');
-   grunt.loadNpmTasks('grunt-minified');
+   grunt.loadNpmTasks('grunt-contrib-uglify');
    grunt.loadNpmTasks('grunt-contrib-concat');
    grunt.loadNpmTasks('grunt-contrib-copy');
    grunt.loadNpmTasks('grunt-jasmine-node');
@@ -154,7 +149,7 @@ module.exports = function (grunt) {
    grunt.registerTask('tests', ['shell:specs', 'jasmine_node']);
 
    // Default task - compile, test, build dists
-   grunt.registerTask('default', ['tests', 'shell:tsc', 'minified', 'concat', 'copy', 'shell:nuget']);
+   grunt.registerTask('default', ['tests', 'shell:tsc', 'uglify', 'concat', 'copy', 'shell:nuget']);
 
    // Travis task - for Travis CI
    grunt.registerTask('travis', 'default');
