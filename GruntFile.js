@@ -95,16 +95,6 @@ module.exports = function (grunt) {
          },
 
          //
-         // Package up Nuget (Windows only)
-         //
-         nuget: {
-            command: 'tools\\nuget pack TypeState.nuspec -version <%= pkg.version %> -OutputDirectory ./dist',
-            options: {
-               stdout: true
-            }
-         },
-
-         //
          // TypeScript Compile Jasmine specs
          // TODO: Simplify this so we don't have to always update it every time we add a spec
          //
@@ -115,20 +105,8 @@ module.exports = function (grunt) {
                failOnError: true
             }
          }
-      },
+      }
 
-      //
-      // Copy Files for sample game
-      //
-      copy: {
-         main: {
-            files: [
-               {src: './dist/<%= pkg.name %>.js', dest: './dist/<%= pkg.name %>-<%= pkg.version %>.js'},
-               {src: './dist/<%= pkg.name %>.min.js', dest: './dist/<%= pkg.name %>-<%= pkg.version %>.min.js'},
-               {src: './dist/<%= pkg.name %>.d.ts', dest: './dist/<%= pkg.name %>-<%= pkg.version %>.d.ts'}
-            ]
-         }
-      },
    });
 
    //
@@ -149,7 +127,7 @@ module.exports = function (grunt) {
    grunt.registerTask('tests', ['shell:specs', 'jasmine_node']);
 
    // Default task - compile, test, build dists
-   grunt.registerTask('default', ['tests', 'shell:tsc', 'uglify', 'concat', 'copy', 'shell:nuget']);
+   grunt.registerTask('default', ['tests', 'shell:tsc', 'uglify', 'concat']);
 
    // Travis task - for Travis CI
    grunt.registerTask('travis', 'default');
